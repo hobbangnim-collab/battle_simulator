@@ -1,0 +1,43 @@
+﻿전법명,발동시점,효과유형,발동률,계수,대상,지속턴,상태,발동조건역할,대상진영,대상역할,중첩규칙,효과키
+위압의 일격,active,physical_damage,0.35,1.85,enemy_1,0,stun,,,,highest,
+일기당천,assault,physical_damage,0.30,0.72,enemy_all,0,,,,,highest,
+기세등등,command,disarm,1.00,0.00,enemy_2,2,disarm,,,,highest,
+맹렬한 돌파,active,physical_damage,0.40,1.55,enemy_1,0,,,,,highest,
+낙봉,active,physical_damage,0.35,1.30,enemy_1,1,silence,,,,highest,
+무장해제 포효,active,disarm,0.35,0.00,enemy_2,1,disarm,,,,highest,
+군심 회복,active,heal,0.45,1.20,ally_1,0,,,,,highest,
+잠피기봉,command,damage_reduce,1.00,0.18,ally_2,3,,,,,highest,taken:all
+의심 안정,active,clear_control,0.35,0.00,ally_all,0,,,,,highest,
+통솔 지휘,prepare,attribute_buff,1.00,0.12,ally_all,8,,,,,highest,
+군민위로,command,damage_reduce,1.00,0.22,ally_2,3,,,,,highest,taken:all
+초선차전,active,heal,0.65,0.28,ally_2,2,,,self,,refresh,aid:chosun
+반격 태세,prepare,counter,1.00,0.85,self,8,,,,,highest,counter
+도발의 갑옷,command,taunt,1.00,0.00,enemy_2,2,taunt,,,,highest,
+강타,assault,physical_damage,0.40,1.00,enemy_1,0,,,,,highest,
+화공 계략,active,strategy_damage,0.45,1.60,enemy_1,0,burn,,,,highest,
+허망 계책,active,silence,0.40,0.00,enemy_2,1,silence,,,,highest,
+팔문금쇄,command,damage_reduce,1.00,0.16,ally_all,3,,,,,highest,taken:all
+연환 화계,active,burn,0.40,0.80,enemy_all,2,burn,,,,highest,
+불타는 군영,active,strategy_damage,0.45,1.20,enemy_all,0,burn,,,,highest,
+지략의 불길,active,strategy_damage,0.50,1.35,enemy_all,0,,,,,highest,
+화상 확산,assault,burn,0.35,0.65,enemy_2,2,burn,,,,highest,
+의부병소,prepare,damage_amp,1.00,0.03,self,8,weapon,,,,stack,dealt:weapon:morale_card
+솔선수범,after_basic,strategy_damage,0.35,1.82,enemy_1,1,,,,,highest,
+유리한 기회,after_basic,physical_damage,0.35,1.85,enemy_1,1,허망,,,,highest,
+최봉단인,after_basic,physical_damage,0.45,1.98,enemy_1,1,,,,,highest,
+부위경정,command,split_damage_reduce,1.00,0.39,ally_all,3,all,,self,전체,highest,taken:all:bujing
+만군탈수,active,speed_down,0.60,0.85,enemy_1,2,피습|파괴|치료금지|허망|무장해제,,,,unique,control:mangun
+해번위,prepare,speed_buff,1.00,0.36,ally_all,8,,,self,전체,highest,speed:haebeon
+오예왕후,prepare,distribute_weakness,1.00,15,enemy_all,8,,,enemy,전체,stack,weakness:oye
+임위구주,round_start,heal,0.50,0.85,ally_1,1,,,self,,refresh,heal:imgwi
+주장 강화 예시,prepare,damage_amp,1.00,0.10,self,8,weapon,주장,self,주장,highest,dealt:weapon
+상대 주장 타격 예시,active,physical_damage,0.45,1.60,enemy_1,0,,,enemy,주장,highest,
+우리 주장 보호 예시,command,split_damage_reduce,1.00,0.30,ally_1,3,weapon,,self,주장,highest,taken:weapon
+상대 부장 약화 예시,action_start,stat_down,1.00,0.04,enemy_all,2,,,enemy,부장,highest,
+턴 시작 보호 예시,round_start,split_damage_reduce,1.00,0.12,ally_all,1,weapon,,self,전체,highest,taken:weapon
+공격 전 강화 예시,before_basic,damage_amp,1.00,0.08,self,1,weapon,,self,,refresh,dealt:weapon
+피해 후 반격 예시,when_damaged,physical_damage,0.40,0.65,enemy_1,0,,,enemy,,refresh,
+회복 후 보호 예시,when_healed,split_damage_reduce,1.00,0.10,self,1,all,,self,,highest,taken:all
+턴 종료 회복 예시,round_end,heal,1.00,0.35,ally_1,0,,,self,,highest,
+위무병소,prepare,damage_amp,1.00,0.03,self,8,weapon,,self,,stack,dealt:weapon:weimubingzhao
+부위경정-주장보강,command,split_damage_reduce,1.00,0.42,self,3,all,주장,self,주장,highest,taken:all:bujing_leader

@@ -1,0 +1,5 @@
+장비명,장비종류,스킬명,발동시점,효과유형,발동률,계수,대상,지속턴,상태,발동조건역할,대상진영,대상역할,중첩규칙,효과키
+청룡언월도,무기,무기 피해 증가,prepare,damage_amp,1.00,0.03,self,8,weapon,,self,,stack,dealt:weapon:weapon_sample
+등갑,갑옷,받는 무기 피해 감소,prepare,split_damage_reduce,1.00,0.03,self,8,weapon,,self,,highest,taken:weapon:armor_sample
+적토마,탈것,속도 증가,prepare,speed_buff,1.00,0.05,self,8,,,self,,highest,speed:horse_sample
+맹덕신서,보물,책략 피해 증가,prepare,damage_amp,1.00,0.03,self,8,strategy,,self,,stack,dealt:strategy:treasure_sample
