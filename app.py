@@ -12,6 +12,7 @@ TACTIC_PATH = BASE_DIR / "data" / "tactics.csv"
 EQUIPMENT_SKILL_PATH = BASE_DIR / "data" / "equipment_skills.csv"
 TIER_TABLE_PATH = BASE_DIR / "static" / "hero_tier_table.pdf"
 TIER_TABLE_STATIC_URL = "app/static/hero_tier_table.pdf"
+TIER_PAGE_DIR = BASE_DIR / "static" / "tier_pages"
 
 
 st.set_page_config(page_title="삼국지전략판 차차의 전략 서포터", layout="wide")
@@ -57,23 +58,8 @@ stat_specs = [
 ]
 
 
-@st.cache_data(show_spinner=False)
-def pdf_page_count(pdf_path):
-    import fitz
-
-    with fitz.open(pdf_path) as document:
-        return document.page_count
-
-
-@st.cache_data(show_spinner=False)
-def render_pdf_page(pdf_path, page_number, zoom):
-    import fitz
-
-    with fitz.open(pdf_path) as document:
-        page = document.load_page(page_number - 1)
-        matrix = fitz.Matrix(zoom, zoom)
-        pixmap = page.get_pixmap(matrix=matrix, alpha=False)
-        return pixmap.tobytes("png")
+def tier_page_paths():
+    return sorted(TIER_PAGE_DIR.glob("tier_page_*.png"))
 
 
 def load_general_rows():
@@ -503,7 +489,7 @@ with tier_tab:
     st.subheader("티어표")
     if TIER_TABLE_PATH.exists():
         pdf_bytes = TIER_TABLE_PATH.read_bytes()
-        page_total = pdf_page_count(str(TIER_TABLE_PATH))
+        pages = tier_page_paths()
         button_col, download_col = st.columns([1, 5])
         with button_col:
             st.link_button("새 창에서 PDF 열기", TIER_TABLE_STATIC_URL)
@@ -515,14 +501,10 @@ with tier_tab:
                 mime="application/pdf",
             )
 
-        page_col, zoom_col = st.columns([2, 1])
-        with page_col:
-            page_number = st.slider("페이지", 1, page_total, 1)
-        with zoom_col:
-            zoom = st.selectbox("확대", [1.0, 1.25, 1.5, 1.75, 2.0], index=2, format_func=lambda value: f"{value:.2g}x")
-
-        with st.spinner("티어표를 불러오는 중입니다."):
-            page_image = render_pdf_page(str(TIER_TABLE_PATH), page_number, zoom)
-        st.image(page_image, use_container_width=True)
+        if pages:
+            page_number = st.slider("페이지", 1, len(pages), 1)
+            st.image(str(pages[page_number - 1]), use_container_width=True)
+        else:
+            st.warning("티어표 페이지 이미지를 찾을 수 없습니다.")
     else:
         st.warning("티어표 PDF 파일을 찾을 수 없습니다.")
