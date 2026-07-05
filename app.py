@@ -57,6 +57,25 @@ stat_specs = [
 ]
 
 
+@st.cache_data(show_spinner=False)
+def pdf_page_count(pdf_path):
+    import fitz
+
+    with fitz.open(pdf_path) as document:
+        return document.page_count
+
+
+@st.cache_data(show_spinner=False)
+def render_pdf_page(pdf_path, page_number, zoom):
+    import fitz
+
+    with fitz.open(pdf_path) as document:
+        page = document.load_page(page_number - 1)
+        matrix = fitz.Matrix(zoom, zoom)
+        pixmap = page.get_pixmap(matrix=matrix, alpha=False)
+        return pixmap.tobytes("png")
+
+
 def load_general_rows():
     frame = pd.read_csv(GENERAL_PATH, encoding="utf-8-sig")
     return {row["장수"]: row.to_dict() for _, row in frame.iterrows()}
@@ -484,23 +503,26 @@ with tier_tab:
     st.subheader("티어표")
     if TIER_TABLE_PATH.exists():
         pdf_bytes = TIER_TABLE_PATH.read_bytes()
-        st.link_button("새 창에서 PDF 열기", TIER_TABLE_STATIC_URL)
-        st.download_button(
-            "PDF 다운로드",
-            data=pdf_bytes,
-            file_name="hero_tier_table.pdf",
-            mime="application/pdf",
-        )
-        st.markdown(
-            f"""
-            <iframe
-                src="/{TIER_TABLE_STATIC_URL}#toolbar=1&navpanes=1&view=FitH"
-                width="100%"
-                height="900px"
-                style="border: 1px solid #ddd; border-radius: 6px; background: #fff;"
-            ></iframe>
-            """,
-            unsafe_allow_html=True,
-        )
+        page_total = pdf_page_count(str(TIER_TABLE_PATH))
+        button_col, download_col = st.columns([1, 5])
+        with button_col:
+            st.link_button("새 창에서 PDF 열기", TIER_TABLE_STATIC_URL)
+        with download_col:
+            st.download_button(
+                "PDF 다운로드",
+                data=pdf_bytes,
+                file_name="hero_tier_table.pdf",
+                mime="application/pdf",
+            )
+
+        page_col, zoom_col = st.columns([2, 1])
+        with page_col:
+            page_number = st.slider("페이지", 1, page_total, 1)
+        with zoom_col:
+            zoom = st.selectbox("확대", [1.0, 1.25, 1.5, 1.75, 2.0], index=2, format_func=lambda value: f"{value:.2g}x")
+
+        with st.spinner("티어표를 불러오는 중입니다."):
+            page_image = render_pdf_page(str(TIER_TABLE_PATH), page_number, zoom)
+        st.image(page_image, use_container_width=True)
     else:
         st.warning("티어표 PDF 파일을 찾을 수 없습니다.")
