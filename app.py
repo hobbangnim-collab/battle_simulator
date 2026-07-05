@@ -59,7 +59,7 @@ stat_specs = [
 
 
 def tier_page_paths():
-    return sorted(TIER_PAGE_DIR.glob("tier_page_*.png"))
+    return sorted(TIER_PAGE_DIR.glob("tier_page_*.jpg"))
 
 
 def load_general_rows():
